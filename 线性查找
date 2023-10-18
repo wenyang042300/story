@@ -1,0 +1,25 @@
+public class LinearSearch {
+    public static int linearSearch(int[] arr, int target) {
+        int n = arr.length;
+
+        for (int i = 0; i < n; i++) {
+            if (arr[i] == target) {
+                return i;  // 返回目标元素的索引
+            }
+        }
+
+        return -1;  // 目标元素未找到
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {5, 2, 8, 3, 1};
+        int target = 8;
+        int index = linearSearch(arr, target);
+
+        if (index != -1) {
+            System.out.println("元素 " + target + " 在数组中的索引为 " + index);
+        } else {
+            System.out.println("元素 " + target + " 未在数组中找到");
+        }
+    }
+}
