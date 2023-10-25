@@ -1,0 +1,25 @@
+public void shellSort(int[] arr) {
+    int n = arr.length;
+ 
+    // 构造增量序列
+    int h = 1;
+    while (h < n / 3) {
+        h = 3 * h + 1;
+    }
+ 
+    while (h >= 1) {
+        // 将数组变为 h 有序
+        for (int i = h; i < n; i++) {
+            // 对 arr[i], arr[i-h], arr[i-2*h], arr[i-3*h]... 使用插入排序
+            int e = arr[i];
+            int j = i;
+            for (; j >= h &amp;&amp; e < arr[j - h]; j -= h) {
+                arr[j] = arr[j - h];
+            }
+            arr[j] = e;
+        }
+ 
+        // 减小 h
+        h /= 3;
+    }
+}
