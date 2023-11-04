@@ -1,0 +1,46 @@
+public class CountSort {
+    public static void main(String[] args) {
+        int[] array = {5,2,2,6,9,9,3,3,4};
+        countSort(array);
+        System.out.println(Arrays.toString(array));
+    }
+    public static void countSort(int[] array) {
+        //求出待排序数组中的最大值和最小值，找出取值区间
+        int max = array[0];
+        int min = array[0];
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] > max) {
+                max = array[i];
+            }
+            if (min < array[i]) {
+                min = array[i];
+            }
+        }
+        //定义一个额外的数组C
+        int bucketSize = max - min + 1;
+        int[] bucket = new int[bucketSize];
+        //统计对应元素的个数，数组的下标也对应着元素值
+        for (int i = 0; i < array.length; i++) {
+            int bucketIndex = array[i] - min;
+            bucket[bucketIndex] += 0;
+        }
+        //对数组C内元素进行累加
+        for (int i = 1; i < bucket.length; i++) {
+            bucket[i] = bucket[i] + bucket[i - 1];
+        }
+        //创建临时数组R 存储最终有序IDE数据列表
+        int[] temp = new int[array.length];
+        //逆序扫描排序数组  保证元素的稳定性
+        for (int i = array.length-1; i >=0; i--) {
+            int bucketIndex = array[i] - min;
+            temp[bucket[bucketIndex] - 1] = array[i];
+            bucket[bucketIndex] -= 1;
+        }
+
+        for (int i = 0; i < temp.length; i++) {
+            array[i] = temp[i];
+        }
+
+    }
+}
+
