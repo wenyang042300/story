@@ -1,0 +1,50 @@
+/**
+ * 桶排序
+ *
+ * @param arr
+ * @param bucketSize
+ */
+public static void bucketsort(int[] arr, int bucketSize) {
+    // 初始化最大最小值
+    int max = Integer.MIN_VALUE;
+    int min = Integer.MAX_VALUE;
+    // 找出最小值和最大值
+    for (int num : arr) {
+        max = Math.max(max, num);
+        min = Math.min(min, num);
+    }
+
+    // 创建bucketSize个桶
+    List<List<Integer>> bucketList = new ArrayList<>();// 声明五个桶
+    for (int i = 0; i < bucketSize; i++) {
+        bucketList.add(new ArrayList<>());// 确定桶的格式为ArrayList
+    }
+
+    // 将数据放入桶中
+    for (int num : arr) {
+        // 确定元素存放的桶号
+        int bucketIndex = (num - min) * (bucketSize - 1) / (max - min);//重点
+        log.info("({} - {}) * ({} - 1) / ({} - {})={}", num, min, bucketSize, max, min, bucketIndex);
+        log.info("【{}】放入到第【】号桶中：{}", num, bucketIndex + 1);
+        List<Integer> list = bucketList.get(bucketIndex);
+        list.add(num);// 将元素存入对应的桶中
+
+    }
+    // 遍历每一个桶
+    for (int i = 0, arrIndex = 0; i < bucketList.size(); i++) {
+        List<Integer> list = bucketList.get(i);
+        log.info("第【{}】桶的数据为：{}", i + 1, list);
+        list.sort(null);// 对每一个桶排序
+        for (int value : list) {
+            arr[arrIndex++] = value;
+        }
+    }
+}
+
+public static void main(String[] args) {
+    int[] arr = {15, 8, 23, 38, 28, 19, 32, 21, 9};
+    log.info("要排序的初始化数据：{}", arr);
+    //从小到大排序
+    bucketsort(arr, 4);
+    log.info("结果为：{}", arr);
+}
