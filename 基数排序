@@ -1,0 +1,42 @@
+public static void radixSort(int[] arr) {
+    // 初始化最大值
+    int max = Integer.MIN_VALUE;
+    // 找出最大值
+    for (int num : arr) {
+        max = Math.max(max, num);
+    }
+
+    // 我们这里是数字，所以初始化10个空间，采用LinkedList
+    LinkedList<Integer>[] list = new LinkedList[10];
+    for (int i = 0; i < 10; i++) {
+        list[i] = new LinkedList<>();// 确定桶的格式为ArrayList
+    }
+
+    // 个位数：123 / 1 % 10 = 3
+    // 十位数：123 / 10 % 10 = 2
+    // 百位数: 123 / 100 % 10 = 1
+    for (int divider = 1; divider <= max; divider *= 10) {
+        // 分类过程(比如个位、十位、百位等)
+        for (int num : arr) {
+            int no = num / divider % 10;
+            list[no].offer(num);
+        }
+        log.info("分类结果为：{}", Arrays.asList(list));
+        int index = 0; // 遍历arr原数组
+        // 收集的过程
+        for (LinkedList<Integer> linkedList : list) {
+            while (!linkedList.isEmpty()) {
+                arr[index++] = linkedList.poll();
+            }
+        }
+        log.info("排序后结果为：{}", arr);
+        log.info("---------------------------------");
+    }
+}
+
+public static void main(String[] args) {
+    int[] arr = {10, 19, 32, 200, 23, 22, 8, 12, 9, 108};
+    log.info("要排序的数据为：{}", arr);
+    radixSort(arr);
+    log.info("基数排序的结果为：{}", arr);
+}
