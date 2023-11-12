@@ -1,0 +1,71 @@
+//头节点
+public class HNode<T> {
+
+    public T data; //数据域
+    public boolean isVisit; //标识该头节点是否已经被访问过
+    public TNode firstArc; //指针域，指向第一个表节点
+
+    public HNode(T data) {
+        this.data = data;
+    }
+
+    public HNode() {
+    }
+
+    @Override
+    public String toString() {
+        return "HNode{" +
+                "data=" + data +
+                ", isVisit=" + isVisit +
+                ", firstArc=" + firstArc +
+                '}';
+    }
+}
+
+//表节点
+class TNode {
+
+    public int hNodeIndex;//存储头节点下标
+    public TNode nextArc; //指针域，指向下一个相邻的表节点
+
+    public TNode(int hNodeIndex) {
+        this.hNodeIndex = hNodeIndex;
+    }
+
+}
+
+class Graph {
+
+    private HNode[] vertices; //存储头节点
+
+    public Graph(HNode[] vertices) {
+        this.vertices = vertices;
+    }
+
+    //构建图
+    public void build(Object data) {
+
+    }
+
+    //图的深度优先搜索
+    //index表示从顺序表中的第几个节点开始遍历
+    public void dfs(int index) {
+        //访问index对应的头节点
+        System.out.println(vertices[index].data);
+        //设置当前节点为已访问
+        vertices[index].isVisit = true;
+        //临时变量，用于辅助遍历表节点
+        TNode temp = vertices[index].firstArc;
+        //通过表节点访问未被访问过的头节点
+        while (temp != null) {
+            if (vertices[temp.hNodeIndex].isVisit) {
+                //当前节点已经被访问过，无需再访问，继续往后寻找
+                temp = temp.nextArc; //后移
+            } else {
+                //当前表节点对应的头节点没有被访问过，以该头节点为起点，继续执行上面代码的逻辑：访问-寻找为访问的表节点-访问-寻找完毕，退出
+                dfs(temp.hNodeIndex);
+            }
+        }
+    }
+
+}
