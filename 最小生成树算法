@@ -1,0 +1,97 @@
+ /**
+     * 克鲁斯卡尔算法实现
+     * @param minTree
+     * @return
+     */
+    /**
+     * 模拟实现一条边
+     */
+    static class Edge{
+        public int srcIndex;
+        public int destIndex;
+        public int weight;
+ 
+        public Edge(int srcIndex, int destIndex, int weight) {
+            this.srcIndex = srcIndex;
+            this.destIndex = destIndex;
+            this.weight = weight;
+        }
+    }
+ 
+    public int kruskal(GraphOfMatrix minTree) {
+        //1.定义一个优先级队列
+        PriorityQueue<Edge> minQ = new PriorityQueue<Edge>(new Comparator<Edge>() {
+            @Override
+            public int compare(Edge o1, Edge o2) {
+                return o1.weight - o2.weight;
+            }
+        });
+        int n = arrayV.length;
+        //2.遍历领接矩阵,将所有的边都放入优先级队列中
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i < j && Matrix[i][j] != Integer.MIN_VALUE) {
+                    minQ.offer(new Edge(i, j, Matrix[i][j]));
+                }
+            }
+        }
+        //3.构造并查集将符合要求的边加入到最小生成树中
+        UnionFindSet ufs = new UnionFindSet(n);
+ 
+        int size = 0;//记录最小生成树中边的数量
+        int totalWeight = 0;//记录权值
+        while (size < n - 1 && !minQ.isEmpty()) {
+            Edge edge = minQ.poll();
+            int srcIndex = edge.srcIndex;
+            int destIndex = edge.destIndex;
+            //同一边的相邻顶点不能来自同一集合
+            if (!ufs.isSameUnionFindSet(srcIndex, destIndex)) {
+                //将符合条件的边加入到最小生成树中
+                minTree.addEdgeUseIndex(srcIndex, destIndex, Matrix[srcIndex][destIndex]);
+                System.out.println("选择的边"+arrayV[srcIndex]+" -> "+arrayV[destIndex]+Matrix[srcIndex][destIndex]);
+                size++;
+                totalWeight += Matrix[srcIndex][destIndex];
+                //将添加过的边的相邻顶点放入同一集合,防止出现环.
+                ufs.union(srcIndex, destIndex);
+            }
+        }
+        if (size == n - 1) {
+            return totalWeight;
+        } else {
+            throw new RuntimeException("没有最小生成树");
+        }
+    }
+ 
+   //按照下标将边加入到最小生成树中
+    public void addEdgeUseIndex(int srcIndex,int destIndex,int weight){
+        Matrix[srcIndex][destIndex] = weight;
+        //如果是无向图邻接矩阵对称位置也要添加
+        if (!isDirect){
+            Matrix[destIndex][srcIndex] = weight;
+        }
+    }
+    //测试克鲁斯卡尔算法
+    public static void main(String[] args) {
+        String str = "abcdefghi";
+        char[] array =str.toCharArray();
+        graph.GraphOfMatrix g = new graph.GraphOfMatrix(str.length(),false);
+        g.initArray(array);
+        g.addEdge('a', 'b', 4);
+        g.addEdge('a', 'h', 8);
+//g.addEdge('a', 'h', 9);
+        g.addEdge('b', 'c', 8);
+        g.addEdge('b', 'h', 11);
+        g.addEdge('c', 'i', 2);
+        g.addEdge('c', 'f', 4);
+        g.addEdge('c', 'd', 7);
+        g.addEdge('d', 'f', 14);
+        g.addEdge('d', 'e', 9);
+        g.addEdge('e', 'f', 10);
+        g.addEdge('f', 'g', 2);
+        g.addEdge('g', 'h', 1);
+        g.addEdge('g', 'i', 6);
+        g.addEdge('h', 'i', 7);
+        graph.GraphOfMatrix kminTree = new graph.GraphOfMatrix(str.length(),false);
+        System.out.println(g.kruskal(kminTree));
+        kminTree.printGraph();
+    }
